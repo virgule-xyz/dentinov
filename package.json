@@ -1,0 +1,51 @@
+{
+  "name": "dentinov",
+  "displayName": "dentinov",
+  "bundleID": "fr.dentinov.app1",
+  "version": "0.1.0",
+  "private": true,
+  "story": false,
+  "env": "test",
+  "splashtime": 1000,
+  "styles": "default",
+  "url": "",
+  "peerDependencies": {
+    "react": "16.8.1",
+    "react-native": "0.57.8"
+  },
+  "scripts": {
+    "unsetup": "rm -rf .cache/* cache/* coverage/* node_modules android ios && rm *.lock && rm *.log & rm *-lock.json",
+    "setup": "react-native upgrade; react-native link; react-native link lottie-ios; react-native link react-native-screens; react-native link lottie-react-native; react-native link react-native-linear-gradient; react-native link react-native-gesture-handler; react-native link react-native-camera; react-native link react-native-sound; react-native link react-native-interactable; ",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "clean": "node node_modules/react-native/local-cli/cli.js start --reset-cache",
+    "pretty": "eslint src --fix; prettier --write \"src/**/*.js\"",
+    "myphone": "react-native run-ios --device",
+    "iphone": "react-native run-ios --simulator='iPhone 6'",
+    "bigphone": "react-native run-ios --simulator='iPhone X'",
+    "android": "adb reverse tcp:8081 tcp:8081; react-native run-android",
+    "storybook": "rnstl; open 'http://localhost:7007'; storybook start",
+    "prestorybook": "rnstl",
+    "test": "jest --verbose --coverage",
+    "testwatch": "jest --verbose --watch",
+    "testclean": "jest --clearCache; jest --updateSnapshot",
+    "testdebug": "node --inspect node_modules/.bin/jest --runInBand --verbose --watch",
+    "coverage": "open ./coverage/lcov-report/index.html",
+    "e2ebuild": "detox build -c ios.sim.debug",
+    "e2e": "detox test -c ios.sim.debug",
+    "list": "yarn list --depth=0"
+  },
+  "dependencies": {
+    "react": "16.8.3",
+    "react-native": "0.58.5"
+  },
+  "devDependencies": {
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "24.1.0",
+    "jest": "24.1.0",
+    "metro-react-native-babel-preset": "0.52.0",
+    "react-test-renderer": "16.8.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
