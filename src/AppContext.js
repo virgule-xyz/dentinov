@@ -69,9 +69,10 @@ class ApplicationContextProvider extends Component {
   setUser = () => {};
 
   searchProjectByCode = projectId => {
+    console.warn(projectId);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (projectId === "123456") {
+        if (projectId === "123456" || projectId === "3286010035271") {
           resolve({ id: 12, name: "projet machin" });
         } else {
           reject({ msg: "Code introuvable" });

@@ -78,6 +78,7 @@ class Sign extends Component {
               passwordError: !pwdCorrect
             });
             Toast.show({
+              type: "danger",
               duration: 3000,
               position: "top",
               text: "Vos identifiants ne sont pas corrects, merci de reéssayer",
@@ -90,6 +91,7 @@ class Sign extends Component {
               passwordError: !pwdCorrect
             });
             Toast.show({
+              type: "danger",
               duration: 1500,
               position: "top",
               text: error,
@@ -133,7 +135,7 @@ class Sign extends Component {
               </Item>
               <Space />
               <Button full iconLeft onPress={this.onPressEnter}>
-                <Icon name="home" />
+                <Icon name="login" type="AntDesign" />
                 <Text>Entrer</Text>
               </Button>
             </Form>
