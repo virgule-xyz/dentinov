@@ -1,10 +1,12 @@
-/**
- * @format
- * @lint-ignore-every XPLATJSCOPYRIGHT1
- */
+import { AppRegistry } from "react-native";
+import { createStackNavigator, createAppContainer } from "react-navigation";
+import App from "./src/App";
+import { version, name as appName } from "./package.json";
 
-import {AppRegistry} from 'react-native';
-import App from './App';
-import {name as appName} from './app.json';
+console.warn(`** ${appName} version ${version}`);
 
-AppRegistry.registerComponent(appName, () => App);
+const TheApp = App;
+
+AppRegistry.registerComponent(appName, () => TheApp);
+
+export default TheApp;
