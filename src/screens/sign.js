@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Container,
-  Header,
   Content,
   Form,
   Label,
@@ -9,10 +8,6 @@ import {
   Item,
   Button,
   Text,
-  Title,
-  Left,
-  Right,
-  Body,
   Spinner,
   Toast,
   Input

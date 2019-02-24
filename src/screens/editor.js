@@ -1,22 +1,6 @@
 import React, { Component } from "react";
-import {
-  Container,
-  Header,
-  Content,
-  Form,
-  Label,
-  Icon,
-  Item,
-  Button,
-  Text,
-  Title,
-  Left,
-  Right,
-  Body,
-  Spinner,
-  Toast,
-  Input
-} from "native-base";
+import { Button, Text } from "native-base";
+import { Dentinov, ProjectCameraTaker } from "@api";
 import ApplicationContext from "../AppContext";
 
 class Editor extends Component {
@@ -27,32 +11,23 @@ class Editor extends Component {
     this.state = {};
   }
 
-  onPressLogout = () => {
-    this.props.navigation.navigate("Sign");
+  onPressChangeProject = () => {
+    this.context.changeProject();
+    this.props.navigation.navigate("Dashboard");
   };
 
   render() {
     const {} = this.state;
     return (
-      <Container>
-        <Header>
-          <Left>
-            <Button transparent>
-              <Icon name="menu" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Header</Title>
-          </Body>
-          <Right />
-        </Header>
-        <Content>
-          <Text>Coucou</Text>
-          <Button onPress={this.onPressLogout}>
-            <Text>Logout</Text>
-          </Button>
-        </Content>
-      </Container>
+      <Dentinov>
+        <ProjectCameraTaker
+          navigation={this.props.navigation}
+          nextScreen="Resume"
+        />
+        <Button full onPress={this.onPressChangeProject} danger>
+          <Text>Changer de projet</Text>
+        </Button>
+      </Dentinov>
     );
   }
 }

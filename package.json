@@ -42,6 +42,7 @@
     "react-native": "0.58.5",
     "react-native-camera": "git+https://git@github.com/react-native-community/react-native-camera.git",
     "react-native-gesture-handler": "^1.0.16",
+    "react-native-image-picker": "^0.28.0",
     "react-navigation": "^3.3.0"
   },
   "devDependencies": {

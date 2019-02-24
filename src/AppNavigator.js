@@ -11,7 +11,7 @@ import { Sign, Dashboard, Editor, Resume } from "@screens";
 const DashboardStack = createStackNavigator(
   { Dashboard, Editor, Resume },
   {
-    initialRouteName: "Dashboard",
+    initialRouteName: "Resume",
     headerMode: "none",
     navigationOptions: {
       header: null
