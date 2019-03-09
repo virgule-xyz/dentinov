@@ -27,8 +27,8 @@ class Sign extends Component {
       waiting: false,
       loginError: false,
       passwordError: false,
-      login: "",
-      password: ""
+      login: "logidents@centres-dentaires.com",
+      password: "4F2N5Puf5Aqy"
     };
   }
 

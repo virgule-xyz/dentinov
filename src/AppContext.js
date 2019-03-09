@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 const userDefaultState = {
   login: "",
@@ -36,6 +37,12 @@ const defaultApplicationState = {
 const ApplicationContext = React.createContext(defaultApplicationState);
 
 class ApplicationContextProvider extends Component {
+  static API = {
+    BASE_URL: "http://www.logidents.com/api/",
+    LOGIN_URL: "login.php",
+    KEY: "YkcL9zN9CDtwsBJjGn136zDdtgZzpLeYpxtoTf679hKvOEGiXXwYwiZIVHoJyoak"
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -45,21 +52,49 @@ class ApplicationContextProvider extends Component {
     };
   }
 
+  axiosParams = (url, body, params = null) => {
+    const baseParams = {
+      baseURL: ApplicationContextProvider.API.BASE_URL,
+      url: `${url}?key=${ApplicationContextProvider.API.KEY}&${body}`,
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      timeout: 30000,
+      responseType: "json"
+    };
+    return { ...baseParams, ...params };
+  };
+
   testLogin = (login, password) => {
+    const params = this.axiosParams(
+      ApplicationContextProvider.API.LOGIN_URL,
+      `login=${login}&password=${password}`
+    );
+
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (login === "pierre" && password === "pierre") {
-          this.setState({
-            user: {
-              login: "pierre",
-              password: "pierre",
-              name: "Pierre",
-              id: 1
-            }
-          });
-          resolve({ idCorrect: true, pwdCorrect: true, error: "" });
-        } else reject({ idCorrect: false, pwdCorrect: false, error: "" });
-      }, 1000);
+      axios(params)
+        .then(({ data, status }) => {
+          if (status === 200 && data.error > 0) {
+            reject({ idCorrect: false, pwdCorrect: false, error: data.error });
+          } else {
+            this.setState({
+              user: {
+                token: data.token,
+                login: login,
+                password: password,
+                name: login,
+                id: login
+              }
+            });
+            resolve({ idCorrect: true, pwdCorrect: true, error: "" });
+          }
+        })
+        .catch(error => {
+          console.warn("ERROR", error);
+          reject({ idCorrect: false, pwdCorrect: false, error: error });
+        });
     });
   };
 
