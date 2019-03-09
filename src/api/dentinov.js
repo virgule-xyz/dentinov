@@ -12,6 +12,7 @@ import {
   Body,
   Badge
 } from "native-base";
+import { withNavigation } from "react-navigation";
 import ApplicationContext from "../AppContext";
 
 class Dentinov extends Component {
@@ -23,8 +24,8 @@ class Dentinov extends Component {
   }
 
   onPressLogout = () => {
-    this.context.logout();
     this.props.navigation.navigate("Sign");
+    this.context.logout();
   };
 
   render() {
@@ -67,4 +68,4 @@ class Dentinov extends Component {
   }
 }
 
-export default Dentinov;
+export default withNavigation(Dentinov);
