@@ -97,6 +97,10 @@ class Sign extends Component {
     });
   };
 
+  componentDidMount() {
+    this.context.startSendingPictureToServer();
+  }
+
   render() {
     const { waiting, loginError, passwordError } = this.state;
     return (
@@ -114,6 +118,7 @@ class Sign extends Component {
                 <Input
                   autoComplete="off"
                   autoCorrect={false}
+                  defaultValue="logidents@centres-dentaires.com"
                   onChangeText={this.onChangeTextLogin}
                 />
                 {loginError && <Icon name="close-circle" />}
@@ -124,6 +129,7 @@ class Sign extends Component {
                   autoComplete="off"
                   autoCorrect={false}
                   secureTextEntry
+                  defaultValue="4F2N5Puf5Aqy"
                   onChangeText={this.onChangeTextPassword}
                 />
                 {passwordError && <Icon name="close-circle" />}
