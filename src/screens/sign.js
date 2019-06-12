@@ -27,8 +27,10 @@ class Sign extends Component {
       waiting: false,
       loginError: false,
       passwordError: false,
-      login: "logidents@centres-dentaires.com",
-      password: "4F2N5Puf5Aqy"
+      login: "",
+      password: ""
+      /*login: "logidents@centres-dentaires.com",
+      password: "4F2N5Puf5Aqy"*/
     };
   }
 
@@ -118,7 +120,7 @@ class Sign extends Component {
                 <Input
                   autoComplete="off"
                   autoCorrect={false}
-                  defaultValue="logidents@centres-dentaires.com"
+                  defaultValue=""
                   onChangeText={this.onChangeTextLogin}
                 />
                 {loginError && <Icon name="close-circle" />}
@@ -129,7 +131,7 @@ class Sign extends Component {
                   autoComplete="off"
                   autoCorrect={false}
                   secureTextEntry
-                  defaultValue="4F2N5Puf5Aqy"
+                  defaultValue=""
                   onChangeText={this.onChangeTextPassword}
                 />
                 {passwordError && <Icon name="close-circle" />}
