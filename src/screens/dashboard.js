@@ -24,13 +24,13 @@ class Dashboard extends Component {
 
   onPressSearch = id => {
     this.setState({ waiting: true }, () => {
-      this.testCodeBar(id);
+      this.testCodeBar(id, "num");
     });
   };
 
-  testCodeBar = code => {
+  testCodeBar = (code, source) => {
     this.context
-      .searchProjectByCode(code)
+      .searchProjectByCode(code, source)
       .then(project => {
         this.setState({ waiting: false, codeError: false }, () => {
           this.context.setProject(project);
@@ -62,7 +62,7 @@ class Dashboard extends Component {
 
   onBarCodeRead = code => {
     this.setState({ waiting: true, showCamera: false }, () => {
-      this.testCodeBar(code);
+      this.testCodeBar(code, "cab");
     });
   };
 

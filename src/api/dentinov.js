@@ -39,7 +39,7 @@ class Dentinov extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Dentinov Images</Title>
+            <Title>Nobel Dental Lab Images</Title>
           </Body>
           <Right>
             <Badge>

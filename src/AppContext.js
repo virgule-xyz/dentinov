@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import qs from "qs";
 import axios from "axios";
 
 const userDefaultState = {
@@ -12,10 +13,20 @@ const uploadsDefaultState = {
   files: []
 };
 const projectDefaultState = {
+  client: "",
+  crtdt: 0,
+  crtus: "",
+  date: "",
+  etape: 0,
+  gamme: "",
   id: 0,
-  info1: "",
-  info2: "",
-  picture: null
+  mode: "ESS",
+  numero: 0,
+  partenaire: "",
+  picture: null,
+  reference: "",
+  retour: "",
+  travaux: []
 };
 
 const defaultApplicationState = {
@@ -31,15 +42,19 @@ const defaultApplicationState = {
   changeProject: () => {},
   setCurrentPicture: () => {},
   cancelCurrentPicture: () => {},
-  saveCurrentPicture: () => {}
+  saveCurrentPicture: () => {},
+  startSendingPictureToServer: () => {},
+  stopSendingPictureToServer: () => {}
 };
 
 const ApplicationContext = React.createContext(defaultApplicationState);
 
 class ApplicationContextProvider extends Component {
   static API = {
-    BASE_URL: "http://www.logidents.com/api/",
-    LOGIN_URL: "login.php",
+    BASE_URL: "https://www.logidents.com/api/",
+    LOGIN_URL: "token.php",
+    GET_URL: "bon/get.php",
+    PICTURES_URL: "bon/upload.php",
     KEY: "YkcL9zN9CDtwsBJjGn136zDdtgZzpLeYpxtoTf679hKvOEGiXXwYwiZIVHoJyoak"
   };
 
@@ -79,16 +94,20 @@ class ApplicationContextProvider extends Component {
           if (status === 200 && data.error > 0) {
             reject({ idCorrect: false, pwdCorrect: false, error: data.error });
           } else {
-            this.setState({
-              user: {
-                token: data.token,
-                login: login,
-                password: password,
-                name: login,
-                id: login
+            this.setState(
+              {
+                user: {
+                  token: data.token,
+                  login: login,
+                  password: password,
+                  name: login,
+                  id: login
+                }
+              },
+              () => {
+                resolve({ idCorrect: true, pwdCorrect: true, error: "" });
               }
-            });
-            resolve({ idCorrect: true, pwdCorrect: true, error: "" });
+            );
           }
         })
         .catch(error => {
@@ -104,31 +123,30 @@ class ApplicationContextProvider extends Component {
 
   setUser = () => {};
 
-  searchProjectByCode = projectId => {
+  searchProjectByCode = (projectId, source = "cab") => {
+    const params = this.axiosParams(
+      ApplicationContextProvider.API.GET_URL,
+      `token=${this.state.user.token}&${source}=${projectId}`
+    );
+
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (projectId === "123456" || projectId === "3286010035271") {
-          resolve({
-            id: 12,
-            info1: "projet machin",
-            info2: "des trucs",
-            picture: null
-          });
-        } else {
-          reject({ msg: "Code introuvable" });
-        }
-      }, 1000);
+      axios(params)
+        .then(({ data, status }) => {
+          if (status === 200 && data.error > 0) {
+            reject({ error: data.error, msg: data.errorText });
+          } else {
+            resolve(data);
+          }
+        })
+        .catch(error => {
+          reject({ msg: error });
+        });
     });
   };
 
   setProject = project => {
     this.setState({
-      project: {
-        id: project.id,
-        info1: project.info1,
-        info2: project.info2,
-        picture: project.picture
-      }
+      project: project
     });
   };
 
@@ -169,13 +187,15 @@ class ApplicationContextProvider extends Component {
             }
           };
         },
-        () => resolve()
+        () => {
+          this.startSendingPictureToServer();
+          resolve();
+        }
       );
     });
   };
 
   setCurrentPicture = source => {
-    console.warn(source);
     this.setState(state => ({
       project: {
         ...state.project,
@@ -183,6 +203,108 @@ class ApplicationContextProvider extends Component {
       }
     }));
   };
+
+  /*
+const putThisPictureOnServer = picture =>
+      new Promise((resolve, reject) => {
+        debugger;
+        RNFetchBlob.fetch(
+          'POST',
+          AcciMoto.URL.upload,
+          {
+            'Content-Type': 'multipart/form-data',
+          },
+          [
+            { name: 'key', data: AcciMoto.API.key },
+            { name: 'type', data: picture.name.substr(0, 3) },
+            { name: 'name', data: `${picture.name}.jpg` },
+            { name: 'file', data: picture.file },
+          ],
+        )
+          .then(d => {
+            console.warn('THEN', d);
+            resolve();
+          })
+          .catch(e => {
+            console.warn('CATCH', e);
+            reject();
+          });
+      });
+*/
+
+  sendPictureToServer = elt => {
+    const { id, picture } = elt;
+    const base64 = "data:image/jpeg;base64,";
+    var image64 = picture.uri.substr(base64.length);
+    console.warn(image64);
+    const params = {
+      baseURL: ApplicationContextProvider.API.BASE_URL,
+      url:
+        ApplicationContextProvider.API.PICTURES_URL +
+        "?token=" +
+        this.state.user.token,
+      method: "POST",
+      data: qs.stringify({ id: id, file: image64 }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+      },
+      timeout: 30000,
+      responseType: "json"
+    };
+
+    return new Promise((resolve, reject) => {
+      axios(params)
+        .then(({ data, status }) => {
+          if (status === 200 && data.error > 0) {
+            reject({ error: data.error, msg: data.errorText });
+          } else {
+            resolve();
+          }
+        })
+        .catch(error => {
+          reject({ msg: error });
+        });
+    });
+  };
+
+  startSendingPictureToServer = async () => {
+    const { files } = this.state.uploads;
+    if (files.length > 0) {
+      try {
+        await this.sendPictureToServer(files[0]);
+        await this.removePicture(files[0]);
+        await this.startSendingPictureToServer();
+      } catch (e) {
+        this.stopSendingPictureToServer();
+      }
+    } else await this.stopSendingPictureToServer();
+  };
+
+  removePicture = elt => {
+    return new Promise(resolve => {
+      if (this.state.uploads.count > 0) {
+        const uploads = this.state.uploads.files.filter(
+          file => file.id !== elt.id
+        );
+        this.setState(
+          {
+            uploads: {
+              count: uploads.length,
+              files: uploads
+            }
+          },
+          () => {
+            resolve();
+          }
+        );
+      } else {
+        resolve();
+      }
+    });
+  };
+
+  stopSendingPictureToServer = () => {};
 
   render() {
     const { children } = this.props;
@@ -203,7 +325,9 @@ class ApplicationContextProvider extends Component {
           changeProject: this.changeProject,
           cancelCurrentPicture: this.cancelCurrentPicture,
           saveCurrentPicture: this.saveCurrentPicture,
-          setCurrentPicture: this.setCurrentPicture
+          setCurrentPicture: this.setCurrentPicture,
+          startSendingPictureToServer: this.startSendingPictureToServer,
+          stopSendingPictureToServer: this.stopSendingPictureToServer
         }}
       >
         {children}

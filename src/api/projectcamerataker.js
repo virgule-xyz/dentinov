@@ -82,7 +82,7 @@ class ProjectCameraTaker extends Component {
             <Button
               onPress={this.onPressInvalidate}
               light
-              disabled={project.picture === null}
+              disabled={!project.picture}
             >
               <Icon active name="thumbs-down" style={{ color: "black" }} />
               <Text>Non</Text>
@@ -90,10 +90,7 @@ class ProjectCameraTaker extends Component {
           </Left>
           <Body />
           <Right>
-            <Button
-              onPress={this.onPressValidate}
-              disabled={project.picture === null}
-            >
+            <Button onPress={this.onPressValidate} disabled={!project.picture}>
               <Text>Oui</Text>
               <Icon active name="thumbs-up" />
             </Button>

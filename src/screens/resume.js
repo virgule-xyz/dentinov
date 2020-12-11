@@ -21,9 +21,11 @@ class Resume extends Component {
     return (
       <Dentinov>
         <Card>
-          <CardItem header>
-            <Text>Votre image est bien en cours de chargement...</Text>
-          </CardItem>
+          {this.context.uploads.count > 0 && (
+            <CardItem header>
+              <Text>Votre image est bien en cours de chargement...</Text>
+            </CardItem>
+          )}
           <CardItem body>
             {this.context.uploads.count === 0 && (
               <Text>
